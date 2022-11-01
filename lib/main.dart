@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+
 import 'firebase_options.dart';
 import 'view/login_view.dart';
 import 'view/register_view.dart';
+import 'view/verify_email_view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,7 +38,8 @@ class HomePage extends StatelessWidget {
                   if (emailVerified == true) {
                     print('You are a verified user');
                   } else {
-                    print('Your email is not verified');
+
+                    return const VerifyEmailView();
                   }
 
                   return const Text("Done");
