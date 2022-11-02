@@ -28,7 +28,9 @@ class _RegisterViewState extends State<RegisterView> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
+    return  Scaffold(
+      appBar: AppBar(title: const Text("Register")),
+      body: Column(children: [
       TextField(
           controller: _email,
           enableSuggestions: false,
@@ -59,7 +61,10 @@ class _RegisterViewState extends State<RegisterView> {
               print(e.code);
             }
           },
-          child: const Text("Register"))
-    ]);
+          child: const Text("Register")),
+        TextButton(onPressed: () {
+            Navigator.of(context).pushNamedAndRemoveUntil('/login/', (route) => false);
+          }, child: const Text('Already registered? Login here!'))
+    ]));
   }
 }

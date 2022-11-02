@@ -29,7 +29,9 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
+    return Scaffold(
+      appBar: AppBar(title: const Text("Login")),
+      body: Column(children: [
       TextField(
           controller: _email,
           enableSuggestions: false,
@@ -62,7 +64,15 @@ class _LoginViewState extends State<LoginView> {
               print(e.runtimeType);
             }
           },
-          child: const Text("Login"))
-    ]);
+          child: const Text("Login")),
+      TextButton(
+          onPressed: () {
+            Navigator.of(context).pushNamedAndRemoveUntil(
+              '/register/',
+              (route) => false,
+            );
+          },
+          child: const Text("Not registered yet? Register here!"))
+    ]));
   }
 }
