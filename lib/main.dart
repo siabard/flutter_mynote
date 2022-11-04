@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'firebase_options.dart';
 import 'view/login_view.dart';
+import 'view/notes_view.dart';
 import 'view/register_view.dart';
 import 'view/verify_email_view.dart';
 
@@ -42,7 +43,7 @@ class HomePage extends StatelessWidget {
 
               final emailVerified = user.emailVerified;
               if (emailVerified == true) {
-                return const Text("verified");
+                return const NotesView();
               } else {
                 return const VerifyEmailView();
               }
