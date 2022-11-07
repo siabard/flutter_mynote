@@ -9,7 +9,6 @@ import 'view/notes_view.dart';
 import 'view/register_view.dart';
 import 'view/verify_email_view.dart';
 
-
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -23,6 +22,7 @@ void main() {
         loginRoute: (context) => const LoginView(),
         registRoute: (context) => const RegisterView(),
         notesRoute: (context) => const NotesView(),
+        verifyEmailRoute: (context) => const VerifyEmailView(),
       }));
 }
 
