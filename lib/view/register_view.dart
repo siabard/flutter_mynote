@@ -1,5 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mynote/services/auth/auth_exceptions.dart';
+import 'package:mynote/services/auth/auth_service.dart';
 import 'package:mynote/utilities/show_error_dialog.dart';
 import 'package:mynote/constants/routes.dart';
 
@@ -52,29 +53,29 @@ class _RegisterViewState extends State<RegisterView> {
                 final email = _email.text;
                 final password = _password.text;
                 try {
-                  await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                  await AuthService.firebase().createUser(
                     email: email,
                     password: password,
                   );
-                  final user = FirebaseAuth.instance.currentUser;
-                  user?.sendEmailVerification();
+                  AuthService.firebase().sendEmailVerification();
+
+                  if (!mounted) return;
+
                   Navigator.of(context).pushNamed(verifyEmailRoute);
-                } on FirebaseAuthException catch (e) {
-                  if (e.code == 'weak-password') {
-                    await showErrorDialog(
-                      context,
-                      'Weak password',
-                    );
-                  } else if (e.code == 'email-already-in-use') {
-                    await showErrorDialog(
-                      context,
-                      'Email is already in use',
-                    );
-                  }
-                } catch (e) {
+                } on WeakPasswordAuthException {
                   await showErrorDialog(
                     context,
-                    e.toString(),
+                    'Weak password',
+                  );
+                } on EmailAlreadyInUseAuthException {
+                  await showErrorDialog(
+                    context,
+                    'Email is already in use',
+                  );
+                } on GenericAuthException {
+                  await showErrorDialog(
+                    context,
+                    'Registration error',
                   );
                 }
               },
