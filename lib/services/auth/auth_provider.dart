@@ -5,7 +5,7 @@ abstract class AuthProvider {
 
   AuthUser? get currentUser;
 
-  Future<AuthUser?> logIn({
+  Future<AuthUser> logIn({
     required String email,
     required String password,
   });
