@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mynote/services/auth/auth_exceptions.dart';
 import 'package:mynote/services/auth/bloc/auth_bloc.dart';
 import 'package:mynote/services/auth/bloc/auth_event.dart';
+import 'package:mynote/services/auth/bloc/auth_state.dart';
 import 'package:mynote/utilities/dialogs/error_dialog.dart';
 import '../constants/routes.dart';
 
@@ -50,35 +51,31 @@ class _LoginViewState extends State<LoginView> {
               autocorrect: false,
               decoration:
                   const InputDecoration(hintText: 'Enter your password here')),
-          TextButton(
-              onPressed: () async {
-                final email = _email.text;
-                final password = _password.text;
-                try {
-                  context.read<AuthBloc>().add(
-                        AuthEventLogIn(
-                          email,
-                          password,
-                        ),
-                      );
-                } on UserNotFoundAuthException {
-                  await showErrorDialog(
-                    context,
-                    'User not found',
-                  );
-                } on WrongPasswordAuthException {
-                  await showErrorDialog(
-                    context,
-                    'Wrong credentials',
-                  );
-                } on GenericAuthException {
-                  await showErrorDialog(
-                    context,
-                    'Authentication Error',
-                  );
+          BlocListener<AuthBloc, AuthState>(
+              listener: (context, state) async {
+                if (state is AuthStateLoggedOut) {
+                  if (state.exception is UserNotFoundAuthException) {
+                    await showErrorDialog(context, 'User not found');
+                  } else if (state.exception is WrongPasswordAuthException) {
+                    await showErrorDialog(context, 'Wrong credentials');
+                  } else if (state.exception is GenericAuthException) {
+                    await showErrorDialog(context, 'Authentication error');
+                  }
                 }
               },
-              child: const Text("Login")),
+              child: TextButton(
+                  onPressed: () async {
+                    final email = _email.text;
+                    final password = _password.text;
+
+                    context.read<AuthBloc>().add(
+                          AuthEventLogIn(
+                            email,
+                            password,
+                          ),
+                        );
+                  },
+                  child: const Text("Login"))),
           TextButton(
               onPressed: () {
                 Navigator.of(context).pushNamedAndRemoveUntil(
